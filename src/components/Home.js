@@ -1,9 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
   API_URL,
   API_KEY,
-  IMAGE_BASE_URL,
   POSTER_SIZE,
+  IMAGE_BASE_URL,
   BACKDROP_SIZE
 } from '../config';
 
@@ -16,8 +16,12 @@ import MovieThumb from './elements/MovieThumb';
 
 //custom hook
 import { useHomeFetch } from './hooks/useHomeFetch';
+
+import NoImage from './images/no_image.jpg';
+
 const Home = () => {
   const [{ state, loading, error }, fetchMovies] = useHomeFetch();
+  const [searchTerm, setSearchTerm] = useState('');
   console.log(state);
 
   if (error) return <div>Something went wrong ...</div>;
@@ -31,7 +35,21 @@ const Home = () => {
         text={state.heroImage.overview}
       />
       <SearchBar />
-      <Grid />
+      <Grid header={searchTerm ? 'Search Result' : 'Popular Movie'}>
+        {state.movies.map(movie => (
+          <MovieThumb
+            key={movie.id}
+            clickable // deafult true when no value
+            image={
+              movie.poster_path
+                ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`
+                : NoImage
+            }
+            movieId={movie.id}
+            movieName={movie.original_title}
+          />
+        ))}
+      </Grid>
       <MovieThumb />
       <Spinner />
       <LoadMoreBtn />
