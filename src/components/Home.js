@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import {
-  API_URL,
-  API_KEY,
+  POPULAR_BASE_URL,
+  SEARCH_BASE_URL,
   POSTER_SIZE,
   IMAGE_BASE_URL,
   BACKDROP_SIZE
@@ -21,20 +21,37 @@ import NoImage from './images/no_image.jpg';
 
 const Home = () => {
   const [{ state, loading, error }, fetchMovies] = useHomeFetch();
+
   const [searchTerm, setSearchTerm] = useState('');
-  console.log(state);
+
+  const searchMovies = search => {
+    const endpoint = search ? SEARCH_BASE_URL + search : POPULAR_BASE_URL;
+
+    setSearchTerm(search);
+    fetchMovies(endpoint);
+  };
+  const loadMoreMovies = () => {
+    const searcEndPoint = `${SEARCH_BASE_URL}${searchTerm}&page=${state.currentPage +
+      1}`;
+    const popularEndpoint = `${POPULAR_BASE_URL}&page=${state.currentPage + 1}`;
+
+    const endPoint = searchTerm ? searcEndPoint : popularEndpoint;
+    fetchMovies(endPoint);
+  };
 
   if (error) return <div>Something went wrong ...</div>;
   if (!state.movies[0]) return <Spinner />;
 
   return (
     <Fragment>
-      <HeroImage
-        image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${state.heroImage.backdrop_path}`}
-        title={state.heroImage.original_title}
-        text={state.heroImage.overview}
-      />
-      <SearchBar />
+      {!searchTerm && (
+        <HeroImage
+          image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${state.heroImage.backdrop_path}`}
+          title={state.heroImage.original_title}
+          text={state.heroImage.overview}
+        />
+      )}
+      <SearchBar callback={searchMovies} />
       <Grid header={searchTerm ? 'Search Result' : 'Popular Movie'}>
         {state.movies.map(movie => (
           <MovieThumb
@@ -50,9 +67,10 @@ const Home = () => {
           />
         ))}
       </Grid>
-      <MovieThumb />
-      <Spinner />
-      <LoadMoreBtn />
+      {loading && <Spinner />}
+      {state.currentPage < state.totalPages && !loading && (
+        <LoadMoreBtn text='Load More' callback={loadMoreMovies} />
+      )}
     </Fragment>
   );
 };
