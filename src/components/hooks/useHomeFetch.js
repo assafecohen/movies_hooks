@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { POPULAR_BASE_URL, SEARCH_BASE_URL } from '../../config';
 
 export const useHomeFetch = () => {
