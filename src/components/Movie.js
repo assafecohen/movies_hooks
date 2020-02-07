@@ -18,15 +18,21 @@ const Movie = ({ movieId }) => {
   if (loading) return <Spinner />;
 
   return (
-  <>
-    <Navigation movie={movie.original_title} />
-    <MovieInfo movie={movie} />
-    <MovieInfoBar />
-    <Grid>
-      <Actor />
-    </Grid>
-  </>
-  )
+    <>
+      <Navigation movie={movie.original_title} />
+      <MovieInfo movie={movie} />
+      <MovieInfoBar
+        time={movie.runtime}
+        budget={movie.budget}
+        revenue={movie.revenue}
+      />
+      <Grid header='Actors'>
+        {movie.actors.map(actor => (
+          <Actor key={actor.credit_id} actor={actor} />
+        ))}
+      </Grid>
+    </>
+  );
 };
 
 export default Movie;
