@@ -1,7 +1,5 @@
 import React from 'react';
 
-const Actor = () => {
-  return <div>Actor</div>;
-};
+const Actor = () => <div>Actor</div>;
 
 export default Actor;

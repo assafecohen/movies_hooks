@@ -9,16 +9,15 @@ import NotFound from './NotFound';
 import { GlobalStyle } from './styles/GlobalStyle';
 
 const App = () => (
-  <div>
+  <>
     <Header />
-
     <Router>
-      <Home path='/' />
-      <Movie path='/:movieId' />
-      <NotFound default />
+      <Home path="/" />
+      <Movie path="/:movieId" />
+      <NotFound default />      
     </Router>
     <GlobalStyle />
-  </div>
-);
+  </>
+)
 
 export default App;

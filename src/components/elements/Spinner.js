@@ -2,8 +2,6 @@ import React from 'react';
 
 import { StyledSpinner } from '../styles/StyledSpinner';
 
-const Spinner = () => {
-  return <StyledSpinner />;
-};
+const Spinner = () =><StyledSpinner />
 
 export default Spinner;
