@@ -23,18 +23,31 @@ export const useMovieFetch = movieId => {
       setState({
         ...result,
         actors: creditsResult.cast,
-        directors,
-      })
-
+        directors
+      });
     } catch (error) {
       setError(true);
     }
     setLoading(false);
-  }, [movieId])
+  }, [movieId]);
+
+  useEffect(
+    () => {
+      if (localStorage[movieId]) {
+        console.log('grabbing from localstorage');
+        setState(JSON.parse(localStorage[movieId]));
+        setLoading(false);
+      } else {
+        console.log('grabbing from API');
+        fetchData();
+      }
+    },
+    [fetchData],
+    movieId
+  );
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData])
-
+    localStorage.setItem(movieId, JSON.stringify(state));
+  }, [movieId, state]);
   return [state, loading, error];
-}
+};

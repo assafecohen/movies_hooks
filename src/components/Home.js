@@ -4,7 +4,7 @@ import {
   SEARCH_BASE_URL,
   POSTER_SIZE,
   BACKDROP_SIZE,
-  IMAGE_BASE_URL,
+  IMAGE_BASE_URL
 } from '../config';
 
 // import Components
@@ -21,33 +21,32 @@ import { useHomeFetch } from './hooks/useHomeFetch';
 import NoImage from './images/no_image.jpg';
 
 const Home = () => {
+  const [searchTerm, setSearchTerm] = useState('');
   const [
     {
       state: { movies, currentPage, totalPages, heroImage },
       loading,
-      error,
+      error
     },
-    fetchMovies,
-  ] = useHomeFetch();
-  const [searchTerm, setSearchTerm] = useState('');
+    fetchMovies
+  ] = useHomeFetch(searchTerm);
 
   const searchMovies = search => {
     const endpoint = search ? SEARCH_BASE_URL + search : POPULAR_BASE_URL;
 
     setSearchTerm(search);
     fetchMovies(endpoint);
-
-  }
+  };
 
   const loadMoreMovies = () => {
-    const searchEndpoint = `${SEARCH_BASE_URL}${searchTerm}&page=${currentPage + 1}`;
+    const searchEndpoint = `${SEARCH_BASE_URL}${searchTerm}&page=${currentPage +
+      1}`;
     const popularEndpoint = `${POPULAR_BASE_URL}&page=${currentPage + 1}`;
 
     const endpoint = searchTerm ? searchEndpoint : popularEndpoint;
 
     fetchMovies(endpoint);
-
-  }
+  };
 
   if (error) return <div>Something went wrong ...</div>;
   if (!movies[0]) return <Spinner />;
@@ -79,7 +78,7 @@ const Home = () => {
       </Grid>
       {loading && <Spinner />}
       {currentPage < totalPages && !loading && (
-        <LoadMoreBtn text="Load More" callback={loadMoreMovies} />
+        <LoadMoreBtn text='Load More' callback={loadMoreMovies} />
       )}
     </>
   );
